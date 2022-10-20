@@ -190,7 +190,7 @@ public class ImpiegatoDAOImpl extends AbstractMySQLDAO implements ImpiegatoDAO {
 					temp.setCognome(resultSet.getString("cognome"));
 					temp.setCodiceFiscale(resultSet.getString("codicefiscale"));
 					temp.setDataNascita(resultSet.getDate("datanascita"));
-					temp.setDataAssunzione(resultSet.getDate("dataassunzine"));
+					temp.setDataAssunzione(resultSet.getDate("dataassunzione"));
 					result.add(temp);
 				}
 			} catch (Exception e) {
@@ -204,8 +204,44 @@ public class ImpiegatoDAOImpl extends AbstractMySQLDAO implements ImpiegatoDAO {
 
 	@Override
 	public List<Impiegato> findAllByCompagnia(Compagnia compagnia) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		if (isNotActive())
+			throw new RuntimeException("impossibile effettuare operazioni, connessione non stabilita");
+		
+		if (list().size() < 1)
+			throw new RuntimeException("impossibile effettuare operazioni sul DB, DB vuoto");
+
+		Impiegato temp;
+		Compagnia tempCompagnia;
+		List<Impiegato> result = new ArrayList<>();
+		
+		try (PreparedStatement preparedStatement = connection.prepareStatement(""
+				+ "select * from impiegato i inner join compagnia c on i.compagnia_id = c.id where c.id = ? ")){
+			preparedStatement.setLong(1, compagnia.getId());
+			try (ResultSet resultSet = preparedStatement.executeQuery()){
+				while(resultSet.next()) {
+					tempCompagnia = new Compagnia();
+					tempCompagnia.setRagioneSociale(resultSet.getString("ragioneSociale"));
+					tempCompagnia.setFatturatoAnnuo(resultSet.getInt("fatturatoannuo"));
+					tempCompagnia.setDataFondazione(resultSet.getDate("datafondazione"));
+					tempCompagnia.setId(resultSet.getLong("c.id"));
+
+					temp = new Impiegato();
+					temp.setId(resultSet.getLong("i.id"));
+					temp.setCodiceFiscale(resultSet.getString("codicefiscale"));
+					temp.setNome(resultSet.getString("nome"));
+					temp.setCognome(resultSet.getString("cognome"));
+					temp.setDataAssunzione(resultSet.getDate("dataassunzione"));
+					temp.setDataNascita(resultSet.getDate("datanascita"));
+					temp.setCompagnia(tempCompagnia);
+					result.add(temp);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	@Override
