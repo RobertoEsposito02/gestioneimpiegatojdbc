@@ -190,7 +190,7 @@ public class ImpiegatoDAOImpl extends AbstractMySQLDAO implements ImpiegatoDAO {
 					temp.setCognome(resultSet.getString("cognome"));
 					temp.setCodiceFiscale(resultSet.getString("codicefiscale"));
 					temp.setDataNascita(resultSet.getDate("datanascita"));
-					temp.setDataAssunzione(resultSet.getDate("dataassunzione"));
+					temp.setDataAssunzione(resultSet.getDate("dataassunzine"));
 					result.add(temp);
 				}
 			} catch (Exception e) {
@@ -201,23 +201,13 @@ public class ImpiegatoDAOImpl extends AbstractMySQLDAO implements ImpiegatoDAO {
 		}
 		return result;
 	}
-/*
+
 	@Override
 	public List<Impiegato> findAllByCompagnia(Compagnia compagnia) throws Exception {
-		if (isNotActive())
-			throw new RuntimeException("impossibile effettuare operazioni, connessione non stabilita");
-
-		if(list().size() < 1)
-			throw new RuntimeException("impossibile effettuare operazioni, elenco vuoto");
-		
-		try (PreparedStatement preparedStatement = connection.prepareStatement(""
-				+ "select * from impiegati i inner join compagnia c on i.compagnia_id = c.id where c.id = ?")){
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// TODO Auto-generated method stub
+		return null;
 	}
-*/
+
 	@Override
 	public int countByDataFondazioneCompagniaGreaterThan(Date date) throws Exception {
 		// TODO Auto-generated method stub
