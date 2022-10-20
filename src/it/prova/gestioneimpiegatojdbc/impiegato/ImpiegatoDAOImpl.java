@@ -201,7 +201,7 @@ public class ImpiegatoDAOImpl extends AbstractMySQLDAO implements ImpiegatoDAO {
 		}
 		return result;
 	}
-
+/*
 	@Override
 	public List<Impiegato> findAllByCompagnia(Compagnia compagnia) throws Exception {
 		if (isNotActive())
@@ -210,13 +210,14 @@ public class ImpiegatoDAOImpl extends AbstractMySQLDAO implements ImpiegatoDAO {
 		if(list().size() < 1)
 			throw new RuntimeException("impossibile effettuare operazioni, elenco vuoto");
 		
-		try {
+		try (PreparedStatement preparedStatement = connection.prepareStatement(""
+				+ "select * from impiegati i inner join compagnia c on i.compagnia_id = c.id where c.id = ?")){
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+*/
 	@Override
 	public int countByDataFondazioneCompagniaGreaterThan(Date date) throws Exception {
 		// TODO Auto-generated method stub
