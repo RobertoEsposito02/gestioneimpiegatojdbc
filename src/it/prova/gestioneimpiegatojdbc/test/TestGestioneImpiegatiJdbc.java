@@ -57,8 +57,10 @@ public class TestGestioneImpiegatiJdbc {
 			testFindByExample(impiegatoDAO);
 
 			testFindAllByCompagnia(impiegatoDAO, compagniaDAO);
-			
+
 			testFindAllErroriAssunzione(impiegatoDAO, compagniaDAO);
+
+			testCountByDataFondazioneCompagniaGreaterThan(impiegatoDAO, compagniaDAO);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -302,13 +304,24 @@ public class TestGestioneImpiegatiJdbc {
 
 		if (compagniaDAOInstance.list().size() < 1)
 			throw new RuntimeException("operazione non riuscita, elenco compagnia vuoto");
-		
+
 		List<Impiegato> result = impiegatoDAOInstance.findAllErroriAssunzione();
 		for (Impiegato impiegato : result) {
 			System.out.println(impiegato);
 		}
 
 		System.out.println("----------testFindAllErroriAssunzione PASSED------------");
+	}
+
+	private static void testCountByDataFondazioneCompagniaGreaterThan(ImpiegatoDAO impiegatoDAOInstance,
+			CompagniaDAO compagniaDAOInstance) throws Exception {
+		System.out.println("----------testCountByDataFondazioneCompagniaGreaterThan------------");
+
+		Date dateInput = new SimpleDateFormat("yyyy/MM/dd").parse("1989/01/01");
+		
+		System.out.println("numero impiegati: " + impiegatoDAOInstance.countByDataFondazioneCompagniaGreaterThan(dateInput));
+		
+		System.out.println("----------testCountByDataFondazioneCompagniaGreaterThan PASSED------------");
 	}
 
 }
