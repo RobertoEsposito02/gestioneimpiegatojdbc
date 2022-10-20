@@ -41,7 +41,7 @@ public class TestGestioneImpiegatiJdbc {
 			testFindAllByDataAssunzioneMaggioreDi(compagniaDAO);
 
 			testFindfindAllByRagioneSocialeContiene(compagniaDAO);
-			
+
 			testListImpiegati(impiegatoDAO);
 
 			testGetImpiegati(impiegatoDAO);
@@ -53,19 +53,21 @@ public class TestGestioneImpiegatiJdbc {
 			System.out.println("size elenco dopo insert: " + impiegatoDAO.list().size());
 
 			testDeleteImpiegati(impiegatoDAO);
-			
+
 			testFindByExample(impiegatoDAO);
+
+			testFindAllByCompagnia(impiegatoDAO, compagniaDAO);
 			
-			testFindAllByCompagnia(impiegatoDAO);
-			
+			testFindAllErroriAssunzione(impiegatoDAO, compagniaDAO);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void testListCompagnia(CompagniaDAO compagniaDAOInstance) throws Exception {
 		System.out.println("----------testListCompagnia------------");
-		
+
 		List<Compagnia> result = compagniaDAOInstance.list();
 		for (Compagnia compagnia : result) {
 			System.out.println(compagnia);
@@ -77,9 +79,9 @@ public class TestGestioneImpiegatiJdbc {
 	private static void testGetCompagnia(CompagniaDAO compagniaDAOInstance) throws Exception {
 		System.out.println("----------testGetCompagnia--------------");
 
-		if(compagniaDAOInstance.list().size() < 1)
+		if (compagniaDAOInstance.list().size() < 1)
 			throw new RuntimeException("operazione non riuscita, elenco vuoto");
-		
+
 		Long idInput = compagniaDAOInstance.list().get(0).getId();
 		System.out.println(compagniaDAOInstance.get(idInput));
 
@@ -274,11 +276,39 @@ public class TestGestioneImpiegatiJdbc {
 		System.out.println("----------testFindByExample PASSED------------");
 	}
 
-	private static void testFindAllByCompagnia(ImpiegatoDAO impiegatoDAOInstance) throws Exception {
+	private static void testFindAllByCompagnia(ImpiegatoDAO impiegatoDAOInstance, CompagniaDAO compagniaDAOInstance)
+			throws Exception {
 		System.out.println("----------testFindAllByCompagnia------------");
 
-		Compagnia compagnia = new Compagnia();
+		if (compagniaDAOInstance.list().size() < 1)
+			throw new RuntimeException("operazione non riuscita, non ci sono compagnie");
+
+		if (impiegatoDAOInstance.list().size() < 1)
+			throw new RuntimeException("operazione non riuscita, non ci sono impiegati");
+
+		Compagnia compagniaTest = compagniaDAOInstance.list().get(0);
+
+		List<Impiegato> result = impiegatoDAOInstance.findAllByCompagnia(compagniaTest);
+		for (Impiegato impiegato : result) {
+			System.out.println(impiegato);
+		}
 
 		System.out.println("----------testFindAllByCompagnia PASSED------------");
 	}
+
+	private static void testFindAllErroriAssunzione(ImpiegatoDAO impiegatoDAOInstance,
+			CompagniaDAO compagniaDAOInstance) throws Exception {
+		System.out.println("----------testFindAllErroriAssunzione------------");
+
+		if (compagniaDAOInstance.list().size() < 1)
+			throw new RuntimeException("operazione non riuscita, elenco compagnia vuoto");
+		
+		List<Impiegato> result = impiegatoDAOInstance.findAllErroriAssunzione();
+		for (Impiegato impiegato : result) {
+			System.out.println(impiegato);
+		}
+
+		System.out.println("----------testFindAllErroriAssunzione PASSED------------");
+	}
+
 }
